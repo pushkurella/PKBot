@@ -1,0 +1,43 @@
+{
+    "name": "PKBot",
+    "description": "",
+    "services": [
+        {
+            "type": "abs",
+            "tenantId": "19fddbfe-7a5a-415e-b832-84a7d4e5fcf5",
+            "subscriptionId": "5b6f905a-d159-49d8-9125-faeb08a3da73",
+            "resourceGroup": "pushpakwebapp",
+            "serviceName": "PKBot",
+            "name": "PKBot",
+            "id": "1",
+            "appId": "babf85b7-6f8c-460f-92b9-a2c4b1065db8"
+        },
+        {
+            "type": "blob",
+            "connectionString": "DefaultEndpointsProtocol=https;AccountName=pkbot892e;AccountKey=iqAXEMS39gCtffd8V8LgSgjf7F1SzGucohMyTKhCFiBBHl6wYmNSmRTxQbLrW7zbjqXxUcmAFBtsP5E7egsgng==;",
+            "tenantId": "19fddbfe-7a5a-415e-b832-84a7d4e5fcf5",
+            "subscriptionId": "5b6f905a-d159-49d8-9125-faeb08a3da73",
+            "resourceGroup": "pushpakwebapp",
+            "serviceName": "pkbot892e",
+            "id": "2"
+        },
+        {
+            "type": "endpoint",
+            "appId": "",
+            "appPassword": "",
+            "endpoint": "http://localhost:3978/api/messages",
+            "name": "development",
+            "id": "3"
+        },
+        {
+            "type": "endpoint",
+            "appId": "babf85b7-6f8c-460f-92b9-a2c4b1065db8",
+            "appPassword": "xhrOUUO464$]qfvnWEV01$)",
+            "endpoint": "https://pkbot.azurewebsites.net/api/messages",
+            "name": "production",
+            "id": "4"
+        }
+    ],
+    "padlock": "",
+    "version": "2.0"
+}
