@@ -6,19 +6,64 @@ const { CardFactory } = require('botbuilder');
 const { ActivityTypes } = require('botbuilder');
 const IntroCard = require('./resources/IntroCard.json');
 const WELCOMED_USER = 'welcomedUserProperty';
+const { DialogSet, TextPrompt, WaterfallDialog } = require('botbuilder-dialogs');
+const DIALOG_STATE_PROPERTY = 'dialogState';
+const USER_NAME_PROP = 'user_name';
+const WHO_ARE_YOU = 'who_are_you';
+const HELLO_USER = 'hello_user';
+const NAME_PROMPT = 'name_prompt';
+
 class EchoBot {
     /**
      *
      * @param {ConversationState} conversation state object
+     * @param {Object} userState
      */
-    constructor(conversationState) {
+    constructor(conversationState,userState) {
         // Creates a new state accessor property.
         // See https://aka.ms/about-bot-state-accessors to learn more about the bot state and state accessors
         //this.countProperty = conversationState.createProperty(TURN_COUNTER_PROPERTY);
-        this.welcomedUserProperty = conversationState.createProperty(WELCOMED_USER);
         this.conversationState = conversationState;
-      
+        this.userState = userState;
+        this.dialogState = this.conversationState.createProperty(DIALOG_STATE_PROPERTY);
+        this.userState = this.conversationState.createProperty(USER_NAME_PROP);
+        this.dialogs = new DialogSet(this.dialogState);
+        this.welcomedUserProperty = conversationState.createProperty(WELCOMED_USER);
+    
+        // Add prompts
+        this.dialogs.add(new TextPrompt(NAME_PROMPT));
+
+        // Create a dialog that asks the user for their name.
+        this.dialogs.add(new WaterfallDialog(WHO_ARE_YOU, [
+            this.askForName.bind(this),
+            this.collectAndDisplayName.bind(this)
+        ]));
+         // Create a dialog that displays a user name after it has been collected.
+         this.dialogs.add(new WaterfallDialog(HELLO_USER, [
+            this.displayName.bind(this)
+        ]));
+
     }
+       
+      //First we will ask their name
+      async askForName(dc){
+          await dc.prompt(NAME_PROMPT,`what is your name?`)
+      }
+      
+      //collect and display name
+      async collectAndDisplayName(dc){
+        await this.userName.set(step.context, step.result);
+        await step.context.sendActivity(`Got it. You are ${ step.result }.`);
+        await step.endDialog();
+      }
+
+      // This step loads the user's name from state and displays it.
+    async displayName(step) {
+        const userName = await this.userName.get(step.context, null);
+        await step.context.sendActivity(`Your name is ${ userName }.`);
+        await step.endDialog();
+    }
+
     /**
      *
      * Use onTurn to handle an incoming activity, received from a user, process it, and reply as needed
@@ -83,7 +128,9 @@ class EchoBot {
             // Generic message for all other activities
             await turnContext.sendActivity(`[${ turnContext.activity.type } event detected]`);
         }
-        
+        // Save changes to the user name.
+        //await this.userState.saveChanges(turnContext);
+
     }
 
     async sendWelcomeMessage(turnContext) {
