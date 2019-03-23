@@ -88,6 +88,8 @@ server.listen(process.env.port || process.env.PORT || 3978, function() {
     console.log(`\nTo talk to your bot, open PKBot.bot file in the Emulator`);
 });
 
+
+
 // Listen for incoming activities and route them to your bot main dialog.
 server.post('/api/messages', (req, res) => {
     adapter.processActivity(req, res, async (context) => {

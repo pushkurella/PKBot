@@ -2,8 +2,7 @@
 // Licensed under the MIT License.
 
 // bot.js is your bot's main entry point to handle incoming activities.
-const { CardFactory } = require('botbuilder');
-const { ActivityTypes } = require('botbuilder');
+const { AttachmentLayoutTypes, ActivityTypes, CardFactory } = require('botbuilder');
 const IntroCard = require('./resources/IntroCard.json');
 const WELCOMED_USER = 'welcomedUserProperty';
 const { DialogSet, TextPrompt, WaterfallDialog } = require('botbuilder-dialogs');
@@ -12,7 +11,7 @@ const USER_NAME_PROP = 'user_name';
 const WHO_ARE_YOU = 'who_are_you';
 const HELLO_USER = 'hello_user';
 const NAME_PROMPT = 'name_prompt';
-
+var request = require('request');
 class EchoBot {
     /**
      *
@@ -91,28 +90,37 @@ class EchoBot {
             }
             else {
                 let text = turnContext.activity.text.toLowerCase();
-                switch (text) {
-                case 'hello':
-                case 'hi':
-                    await turnContext.sendActivity(`Hello "${ turnContext.activity.text }" wass up how can i help you?`);
-                    break;
-                case 'intro':
-                case 'help':
+                console.log(text);
+                if(text.includes('hello') || text.includes('hi')){
+                    //await turnContext.sendActivity(`Hello "${ turnContext.activity.text }" wass up how can i help you?`);
+                    await turnContext.sendActivity({ attachments: [this.createWelcomeCard()] });
+                }
+                else if(text.includes('help')){
+                    await turnContext.sendActivity('Type introduction,location, project details,about us,how to contact us to know more about us');
+                }
+                else if(text.includes('intro')){
                     await turnContext.sendActivity({
-                         text: 'About Us',
-                         attachments: [CardFactory.adaptiveCard(IntroCard)]
-                    });
-                    break;
-                case 'location':
+                        text: 'Introduction',
+                        attachments: [CardFactory.adaptiveCard(IntroCard)]
+                   });
+                }
+                else if(text.includes('location')){
                     await turnContext.sendActivity(`We are located at 25 Milling Road, Unit 303, Cambridge, ON`);
-                    break;
-                case 'project details':
+                   
+                }
+                else if(text.includes('details')){
                     await turnContext.sendActivity(`The project is all about parsing PDF documents and extracting required fields in it.`);
-                    break;
-                default :
-                    await turnContext.sendActivity(`This is a simple Welcome Bot sample. You can say 'intro' to
-                                                        see the introduction card. If you are running this bot in the Bot
-                                                        Framework Emulator, press the 'Start Over' button to simulate user joining a bot or a channel`);
+                  
+                }
+                else if(text.includes('about')){
+                    await turnContext.sendActivity({ attachments: [this.aboutUsHeroCard()] , attachmentLayout: AttachmentLayoutTypes.Carousel});
+                }
+                else if(text.includes('contact')){
+                    await turnContext.sendActivity({ attachments: [this.contactAnimationCard()] , attachmentLayout: AttachmentLayoutTypes.Carousel});
+                }
+               else{
+                    
+                    await turnContext.sendActivity(`Type help to see what all i can do`);
                 }
             }
             // Save state changes
@@ -139,13 +147,75 @@ class EchoBot {
             // Iterate over all new members added to the conversation
             for (let idx in turnContext.activity.membersAdded) {
                 if (turnContext.activity.membersAdded[idx].id !== turnContext.activity.recipient.id) {
-                    await turnContext.sendActivity(`Hi!!! my name is Qc Solver bot. 
-                    I am a simple prototype chatbot still learning things. You can type intro,help,location to know more about me!`);
-                    //await turnContext.sendActivity(`what's your name?`);
-                    
+                    // await turnContext.sendActivity(`Hi!!! I am a Qc Solver bot,
+                    // I'am a simple prototype chatbot still learning things. You can type intro,help,location to know more about me!`);
+                    await turnContext.sendActivity({ attachments: [this.createWelcomeCard()] });
+              
                  }
              }
          }
+    }
+
+    contactAnimationCard() {
+        return CardFactory.animationCard(
+            'Time to meet us',
+            [
+                { url: 'https://media.giphy.com/media/136WBMmq4SVDAk/giphy.gif' }
+            ],
+            [],
+            {
+                subtitle: 'Contact US'
+            }
+        );
+    }
+
+    aboutUsHeroCard() {
+        return CardFactory.heroCard(
+            'Welcome to QCSolver',
+            CardFactory.images(['https://members.qcsolver.com/images/qc-solver-logo.png']),
+            CardFactory.actions([
+                {
+                    type: 'openUrl',
+                    title: 'About us:',
+                    value: 'https://test.qcsolver.com/about.aspx'
+                }
+            ])
+        );
+    }
+
+    createWelcomeCard() {
+        return CardFactory.thumbnailCard(
+            'Welcome to QC Solver',
+            [{ url: 'https://members.qcsolver.com/images/qc-solver-logo.png' }],
+            [{
+                type: 'openUrl',
+                title: 'Get started',
+                value: 'http://qcsolver.com/solutions/'
+            }],
+            {
+                subtitle: `Place for expert's solutions`,
+                text: 'The QCsolver SYSTEM is a fully accessible cloud based software and service designed to assist clients and contractors in managing pre-qualifications and performance.'
+            }
+        );
+    }
+    async sendAJoke(turnContext){
+        var options={};
+        var joke;
+        var jokes = {};
+            request({url: 'https://icanhazdadjoke.com/', headers: {Accept : 'text/plain'}}, (error,response,body)=>{
+                //await turnContext.sendActivity(joke);
+            if(!error && response.statusCode ==200){
+                console.log(body);
+                jokes.joke = body; 
+               
+                return body;   
+                   // return body;
+            }
+            });
+            if(jokes.joke){
+                turnContext.sendActivity(jokes.joke);
+            }
+            else turnContext.sendActivity('hii');
     }
 }
 

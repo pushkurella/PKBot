@@ -4,4 +4,3 @@ node_modules
 .deployment
 PostDeployScripts
 .env
-Resources

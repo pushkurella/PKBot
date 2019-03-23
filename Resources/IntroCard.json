@@ -1,0 +1,41 @@
+{
+    "$schema": "http://adaptivecards.io/schemas/adaptive-card.json",
+    "type": "AdaptiveCard",
+    "version": "1.0",
+    "body": [
+      {
+        "type": "Image",
+        "url": "http://qcsolver.com/wp-content/uploads/2017/11/logo-1-1.png",
+        "size": "stretch"
+      },
+      {
+        "type": "TextBlock",
+        "spacing": "medium",
+        "size": "default",
+        "weight": "bolder",
+        "text": "Welcome to Qc Solver team!!!",
+        "wrap": true,
+        "maxLines": 0
+      },
+      {
+        "type": "TextBlock",
+        "size": "default",
+        "isSubtle": true,
+        "text": "We provide services like Monitor Risk, Manage Certificates, Automated process, Track performances and many more...",
+        "wrap": true,
+        "maxLines": 0
+      }
+    ],
+    "actions": [
+      {
+        "type": "Action.OpenUrl",
+        "title": "Get an overview",
+        "url": "http://qcsolver.com/"
+      },
+      {
+        "type": "Action.OpenUrl",
+        "title": "Shoot a question",
+        "url": "http://qcsolver.com/contact/"
+      }
+    ]
+  }
