@@ -1,7 +1,7 @@
 {
-  "name": "echobot-with-counter",
+  "name": "QC_Solver_Chatbot",
   "version": "1.0.0",
-  "description": "Bot Builder v4 echo bot sample",
+  "description": "Chatbot that explains QC solver team and project",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
