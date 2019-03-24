@@ -164,7 +164,7 @@ class EchoBot {
             ],
             [],
             {
-                subtitle: 'Contact US'
+                subtitle: 'Call us at +1 905-296-4003 or +1 226-474-1169 or email: President@qcsolver.com'
             }
         );
     }
