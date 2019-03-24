@@ -8,17 +8,17 @@ const WELCOMED_USER = 'welcomedUserProperty';
 const { DialogSet, TextPrompt, WaterfallDialog } = require('botbuilder-dialogs');
 const DIALOG_STATE_PROPERTY = 'dialogState';
 const USER_NAME_PROP = 'user_name';
-const WHO_ARE_YOU = 'who_are_you';
-const HELLO_USER = 'hello_user';
 const NAME_PROMPT = 'name_prompt';
-var request = require('request');
+const request = require('request');
+const { LuisRecognizer } = require('botbuilder-ai');
+
 class EchoBot {
     /**
      *
      * @param {ConversationState} conversation state object
      * @param {Object} userState
      */
-    constructor(conversationState,userState) {
+    constructor(conversationState,userState,luisApplication,luisPredictionOptions) {
         // Creates a new state accessor property.
         // See https://aka.ms/about-bot-state-accessors to learn more about the bot state and state accessors
         //this.countProperty = conversationState.createProperty(TURN_COUNTER_PROPERTY);
@@ -28,40 +28,13 @@ class EchoBot {
         this.userState = this.conversationState.createProperty(USER_NAME_PROP);
         this.dialogs = new DialogSet(this.dialogState);
         this.welcomedUserProperty = conversationState.createProperty(WELCOMED_USER);
-    
+        this.LuisRecognizer = new LuisRecognizer(luisApplication,luisPredictionOptions,true);
         // Add prompts
         this.dialogs.add(new TextPrompt(NAME_PROMPT));
 
-        // Create a dialog that asks the user for their name.
-        this.dialogs.add(new WaterfallDialog(WHO_ARE_YOU, [
-            this.askForName.bind(this),
-            this.collectAndDisplayName.bind(this)
-        ]));
-         // Create a dialog that displays a user name after it has been collected.
-         this.dialogs.add(new WaterfallDialog(HELLO_USER, [
-            this.displayName.bind(this)
-        ]));
-
     }
        
-      //First we will ask their name
-      async askForName(dc){
-          await dc.prompt(NAME_PROMPT,`what is your name?`)
-      }
-      
-      //collect and display name
-      async collectAndDisplayName(dc){
-        await this.userName.set(step.context, step.result);
-        await step.context.sendActivity(`Got it. You are ${ step.result }.`);
-        await step.endDialog();
-      }
 
-      // This step loads the user's name from state and displays it.
-    async displayName(step) {
-        const userName = await this.userName.get(step.context, null);
-        await step.context.sendActivity(`Your name is ${ userName }.`);
-        await step.endDialog();
-    }
 
     /**
      *
@@ -90,38 +63,63 @@ class EchoBot {
             }
             else {
                 let text = turnContext.activity.text.toLowerCase();
-                console.log(text);
-                if(text.includes('hello') || text.includes('hi')){
-                    //await turnContext.sendActivity(`Hello "${ turnContext.activity.text }" wass up how can i help you?`);
-                    await turnContext.sendActivity({ attachments: [this.createWelcomeCard()] });
-                }
-                else if(text.includes('help')){
-                    await turnContext.sendActivity('Type introduction,location, project details,about us,how to contact us to know more about us');
-                }
-                else if(text.includes('intro')){
-                    await turnContext.sendActivity({
-                        text: 'Introduction',
-                        attachments: [CardFactory.adaptiveCard(IntroCard)]
-                   });
-                }
-                else if(text.includes('location')){
-                    await turnContext.sendActivity(`We are located at 25 Milling Road, Unit 303, Cambridge, ON`);
-                   
-                }
-                else if(text.includes('details')){
-                    await turnContext.sendActivity(`The project is all about parsing PDF documents and extracting required fields in it.`);
-                  
-                }
-                else if(text.includes('about')){
-                    await turnContext.sendActivity({ attachments: [this.aboutUsHeroCard()] , attachmentLayout: AttachmentLayoutTypes.Carousel});
-                }
-                else if(text.includes('contact')){
-                    await turnContext.sendActivity({ attachments: [this.contactAnimationCard()] , attachmentLayout: AttachmentLayoutTypes.Carousel});
-                }
-               else{
-                    
-                    await turnContext.sendActivity(`Type help to see what all i can do`);
-                }
+                console.log(`sending ${text} to luis...`);
+                 // Perform a call to LUIS to retrieve results for the user's message.
+                 const results = await this.LuisRecognizer.recognize(turnContext);
+                 // Since the LuisRecognizer was configured to include the raw results, get the `topScoringIntent` as specified by LUIS.
+                 const topIntent = results.luisResult.topScoringIntent;
+                 const alteredQuery = results.alteredText;
+                 const userSentiment = results.sentiment.label;
+                 console.log(`user sentiment is ${userSentiment}`);
+                 if (alteredQuery !== undefined && text !== alteredQuery){
+                     await turnContext.sendActivity('Your response is auto-corrected to '+alteredQuery);
+                 }
+                     if (topIntent.intent !== 'None' && topIntent.score > 0.5) {
+                        text = topIntent.intent.toLowerCase();
+                        console.log(`Luis top intent is ${text}`);
+                        if(text.includes('welcome')){
+                            //await turnContext.sendActivity(`Hello "${ turnContext.activity.text }" wass up how can i help you?`);
+                            await turnContext.sendActivity({ attachments: [this.createWelcomeCard()] });
+                        }
+                        else if(text.includes('help')){
+                            await turnContext.sendActivity('Type introduction,location, project details,about us,how to contact us to know more about us');
+                        }
+                        else if(text.includes('intro')){
+                            await turnContext.sendActivity({
+                                text: 'Introduction',
+                                attachments: [CardFactory.adaptiveCard(IntroCard)]
+                           });
+                        }
+                        else if(text.includes('location')){
+                            await turnContext.sendActivity(`We are located at 25 Milling Road, Unit 303, Cambridge, ON`);
+                        
+                        }
+                        else if(text.includes('details')){
+                            await turnContext.sendActivity(`The project is all about parsing PDF documents and extracting required fields in it.`);
+                        
+                        }
+                        else if(text.includes('about')){
+                            await turnContext.sendActivity({ attachments: [this.aboutUsHeroCard()] , attachmentLayout: AttachmentLayoutTypes.Carousel});
+                        }
+                        else if(text.includes('contact')){
+                            await turnContext.sendActivity({ attachments: [this.contactAnimationCard()] , attachmentLayout: AttachmentLayoutTypes.Carousel});
+                        }
+                        else if(text.includes('call')){
+                            await turnContext.sendActivity(`You can reach us at +1 905-296-4003 or +1 226-474-1169`);
+                        }
+                        else if(text.includes('email')){
+                            await turnContext.sendActivity(`You can always email us at President@qcsolver.com`);
+                        }
+                        else if(text.includes('feedback')){
+                            await turnContext.sendActivity(`Your feedback would help me in improving my performance, Thank you...`);
+                        }
+                        // await turnContext.sendActivity(`LUIS Top Scoring Intent: ${ topIntent.intent }, Score: ${ topIntent.score }`);
+                     } else {
+                         // If the top scoring intent was "None" tell the user no valid intents were found and provide help.
+                         await turnContext.sendActivity(`No LUIS intents were found.
+                                                 \nYou can more intents by vising luis.ai`);
+                     }
+                
             }
             // Save state changes
             await this.conversationState.saveChanges(turnContext);
@@ -141,6 +139,49 @@ class EchoBot {
 
     }
 
+    async searchWithoutLuis(text,turnContext){
+        if(text.includes('hello') || text.includes('hi')){
+            //await turnContext.sendActivity(`Hello "${ turnContext.activity.text }" wass up how can i help you?`);
+            await turnContext.sendActivity({ attachments: [this.createWelcomeCard()] });
+            return 'yes';
+        }
+        else if(text.includes('help')){
+            await turnContext.sendActivity('Type introduction,location, project details,about us,how to contact us to know more about us');
+            return 'yes';
+        }
+        else if(text.includes('intro')){
+            await turnContext.sendActivity({
+                text: 'Introduction',
+                attachments: [CardFactory.adaptiveCard(IntroCard)]
+           });
+           return 'yes';
+        }
+        else if(text.includes('location')){
+            await turnContext.sendActivity(`We are located at 25 Milling Road, Unit 303, Cambridge, ON`);
+            return 'yes';
+        }
+        else if(text.includes('details')){
+            await turnContext.sendActivity(`The project is all about parsing PDF documents and extracting required fields in it.`);
+            return 'yes';
+        }
+        else if(text.includes('about')){
+            await turnContext.sendActivity({ attachments: [this.aboutUsHeroCard()] , attachmentLayout: AttachmentLayoutTypes.Carousel});
+            return 'yes';
+        }
+        else if(text.includes('contact')){
+            await turnContext.sendActivity({ attachments: [this.contactAnimationCard()] , attachmentLayout: AttachmentLayoutTypes.Carousel});
+            return 'yes';
+        }
+        else if(text.includes('call')){
+            await turnContext.sendActivity(`You can reach us at +1 905-296-4003 or +1 226-474-1169`);
+            return 'yes';
+        }
+        else if(text.includes('email')){
+            await turnContext.sendActivity(`You can always email us at President@qcsolver.com`);
+            return 'yes';
+        }
+    }
+    
     async sendWelcomeMessage(turnContext) {
         // Do we have any new members added to the conversation?
         if (turnContext.activity.membersAdded.length !== 0) {

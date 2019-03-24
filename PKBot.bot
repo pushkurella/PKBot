@@ -12,6 +12,16 @@
             "id": "1",
             "appId": "babf85b7-6f8c-460f-92b9-a2c4b1065db8"
         },
+         {
+            "type": "luis",
+            "name": "LuisBot",
+            "appId": "4e4d3ac1-0b45-47ae-a1ed-e83e62a1df3f",
+            "version": "0.1",
+            "authoringKey": "<luis authoring key>",
+            "subscriptionKey": "e358a70e1372402caa166961df52082d",
+            "region": "<luis region>",
+            "id": "158"
+        },
         {
             "type": "blob",
             "connectionString": "DefaultEndpointsProtocol=https;AccountName=pkbot892e;AccountKey=iqAXEMS39gCtffd8V8LgSgjf7F1SzGucohMyTKhCFiBBHl6wYmNSmRTxQbLrW7zbjqXxUcmAFBtsP5E7egsgng==;",

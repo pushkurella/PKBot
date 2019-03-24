@@ -54,6 +54,15 @@ const adapter = new BotFrameworkAdapter({
     openIdMetadata: process.env.BotOpenIdMetadata
 });
 
+// Map the contents to the required format for `LuisRecognizer`.
+const luisApplication = {
+    applicationId: process.env.luisapplicationId,
+    // CAUTION: Authoring key is used in this example as it is appropriate for prototyping.
+    // When implimenting for deployment/production, assign and use a subscription key instead of an authoring key.
+    endpointKey: process.env.luissubscriptionkey,
+    endpoint: `https://westus.api.cognitive.microsoft.com/luis/v2.0/apps/${process.env.luisapplicationId}?spellCheck=true&bing-spell-check-subscription-key=${process.env.bingSpellcheckKey}&verbose=true&timezoneOffset=-360&subscription-key=${process.env.luissubscriptionkey}&q=`
+};
+
 // Catch-all for any unhandled errors in your bot.
 adapter.onTurnError = async (context, error) => {
     // This check writes out errors to console log .vs. app insights.
@@ -66,6 +75,14 @@ adapter.onTurnError = async (context, error) => {
     await conversationState.saveChanges(context);
 };
 
+// Create configuration for LuisRecognizer's runtime behavior.
+const luisPredictionOptions = {
+    includeAllIntents: true,
+    log: true,
+    staging: false,
+
+    
+};
 // Define a state store for your bot. See https://aka.ms/about-bot-state to learn more about using MemoryStorage.
 // A bot requires a state store to persist the dialog and user state between messages.
 let conversationState;
@@ -78,7 +95,7 @@ conversationState = new ConversationState(memoryStorage);
 
 
 // Create the main dialog.
-const bot = new EchoBot(conversationState,UserState);
+const bot = new EchoBot(conversationState,UserState,luisApplication,luisPredictionOptions);
 
 // Create HTTP server
 let server = restify.createServer();
