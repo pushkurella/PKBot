@@ -113,6 +113,15 @@ class EchoBot {
                         else if(text.includes('feedback')){
                             await turnContext.sendActivity(`Your feedback would help me in improving my performance, Thank you...`);
                         }
+                        else if(text.includes('ceo')){
+                            await turnContext.sendActivity(`QCSolver is owned by Gerald Ford(Jerry)`);
+                        }
+                        else if(text.includes('feedback')){
+                            await turnContext.sendActivity(`Your feedback would help me in improving my performance, Thank you...`);
+                        }
+                        else if(text.includes('registration')){
+                            await turnContext.sendActivity({ attachments: [this.createCostCard()] });
+                        }
                         // await turnContext.sendActivity(`LUIS Top Scoring Intent: ${ topIntent.intent }, Score: ${ topIntent.score }`);
                      } else {
                          // If the top scoring intent was "None" tell the user no valid intents were found and provide help.
@@ -139,48 +148,6 @@ class EchoBot {
 
     }
 
-    async searchWithoutLuis(text,turnContext){
-        if(text.includes('hello') || text.includes('hi')){
-            //await turnContext.sendActivity(`Hello "${ turnContext.activity.text }" wass up how can i help you?`);
-            await turnContext.sendActivity({ attachments: [this.createWelcomeCard()] });
-            return 'yes';
-        }
-        else if(text.includes('help')){
-            await turnContext.sendActivity('Type introduction,location, project details,about us,how to contact us to know more about us');
-            return 'yes';
-        }
-        else if(text.includes('intro')){
-            await turnContext.sendActivity({
-                text: 'Introduction',
-                attachments: [CardFactory.adaptiveCard(IntroCard)]
-           });
-           return 'yes';
-        }
-        else if(text.includes('location')){
-            await turnContext.sendActivity(`We are located at 25 Milling Road, Unit 303, Cambridge, ON`);
-            return 'yes';
-        }
-        else if(text.includes('details')){
-            await turnContext.sendActivity(`The project is all about parsing PDF documents and extracting required fields in it.`);
-            return 'yes';
-        }
-        else if(text.includes('about')){
-            await turnContext.sendActivity({ attachments: [this.aboutUsHeroCard()] , attachmentLayout: AttachmentLayoutTypes.Carousel});
-            return 'yes';
-        }
-        else if(text.includes('contact')){
-            await turnContext.sendActivity({ attachments: [this.contactAnimationCard()] , attachmentLayout: AttachmentLayoutTypes.Carousel});
-            return 'yes';
-        }
-        else if(text.includes('call')){
-            await turnContext.sendActivity(`You can reach us at +1 905-296-4003 or +1 226-474-1169`);
-            return 'yes';
-        }
-        else if(text.includes('email')){
-            await turnContext.sendActivity(`You can always email us at President@qcsolver.com`);
-            return 'yes';
-        }
-    }
     
     async sendWelcomeMessage(turnContext) {
         // Do we have any new members added to the conversation?
@@ -236,6 +203,21 @@ class EchoBot {
             {
                 subtitle: `Place for expert's solutions`,
                 text: 'The QCsolver SYSTEM is a fully accessible cloud based software and service designed to assist clients and contractors in managing pre-qualifications and performance.'
+            }
+        );
+    }
+    createCostCard() {
+        return CardFactory.thumbnailCard(
+            '240$ per year',
+            [{ url: 'https://members.qcsolver.com/images/qc-solver-logo.png' }],
+            [{
+                type: 'openUrl',
+                title: 'Get started',
+                value: 'http://qcsolver.com/solutions/'
+            }],
+            {
+                subtitle: `Cost to register`,
+                text: 'Our services are just a click away...'
             }
         );
     }
