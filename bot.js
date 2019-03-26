@@ -140,6 +140,11 @@ class EchoBot {
                     else if (text.includes('registration')) {
                         await turnContext.sendActivity(`Type help to see more options...`);
                     }
+                    else if (text.includes('joke')) {
+                        var jokes = await this.sendAJoke();
+                        console.log('jokes'+jokes);
+                        //await turnContext.sendActivity(`Type help to see more options...`);
+                    }
                 } else {
                     // If the top scoring intent was "None" tell the user no valid intents were found and provide help.
                     await turnContext.sendActivity(`No LUIS intents were found.
@@ -238,25 +243,20 @@ class EchoBot {
             }
         );
     }
-    async sendAJoke(turnContext) {
-        var options = {};
-        var joke;
+    async sendAJoke() {
         var jokes = {};
-        request({ url: 'https://icanhazdadjoke.com/', headers: { Accept: 'text/plain' } }, (error, response, body) => {
-            //await turnContext.sendActivity(joke);
+        let promise= await new request({ url: 'https://icanhazdadjoke.com/', headers: { Accept: 'text/plain' } }, (error, response, body) => {
+            
             if (!error && response.statusCode == 200) {
-                console.log(body);
+                console.log('body:'+body);
                 jokes.joke = body;
-
-                return body;
-                // return body;
+                //return new Promise.resolve(body);
             }
         });
-        if (jokes.joke) {
-            turnContext.sendActivity(jokes.joke);
-        }
-        else turnContext.sendActivity('hii');
+        return Promise.resolve(promise);
+        
     }
+   
 }
 
 module.exports.EchoBot = EchoBot;
