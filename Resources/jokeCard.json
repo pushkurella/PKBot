@@ -1,0 +1,37 @@
+{
+    "$schema": "http://adaptivecards.io/schemas/adaptive-card.json",
+    "type": "AdaptiveCard",
+    "version": "1.0",
+    "body": [
+      {
+        "type": "Image",
+        "url": "http://eskipaper.com/images/funny-cartoon-kids-1.jpg",
+        "size": "stretch"
+      },
+      {
+        "type": "TextBlock",
+        "spacing": "medium",
+        "size": "default",
+        "weight": "bolder",
+        "text": "HAHAHA!!!",
+        "wrap": true,
+        "maxLines": 0
+      }
+    ],
+    "actions": [
+      {
+        "type": "Action.Submit",
+        "title": "Funny",
+        "data": {
+            "value": "yesfunny"
+        }
+      },
+      {
+        "type": "Action.Submit",
+        "title": "Not Funny",
+        "data": {
+            "value": "nofunny"
+        }
+      }
+    ]
+  }

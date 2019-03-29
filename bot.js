@@ -4,6 +4,7 @@
 // bot.js is your bot's main entry point to handle incoming activities.
 const { AttachmentLayoutTypes, ActivityTypes, CardFactory } = require('botbuilder');
 const IntroCard = require('./resources/IntroCard.json');
+const JokeCard = require('./resources/JokeCard.json');
 const WELCOMED_USER = 'welcomedUserProperty';
 const { DialogSet, TextPrompt,ChoicePrompt, WaterfallDialog ,ListStyle} = require('botbuilder-dialogs');
 const DIALOG_STATE_PROPERTY = 'dialogState';
@@ -74,7 +75,10 @@ class EchoBot {
                 await this.welcomedUserProperty.set(turnContext, true);
             }
             else {
+                
+                if(turnContext.activity.text){
                 let text = turnContext.activity.text.toLowerCase();
+                 
                 console.log(`sending ${text} to luis...`);
                 // Perform a call to LUIS to retrieve results for the user's message.
                 const results = await this.LuisRecognizer.recognize(turnContext);
@@ -83,6 +87,7 @@ class EchoBot {
                 const alteredQuery = results.alteredText;
                 const userSentiment = results.sentiment.label;
                 var found = false;
+                console.log(`Luis processed output ${topIntent.intent}`)
                 console.log(`user sentiment is ${userSentiment}`);
                 if (alteredQuery !== undefined && text !== alteredQuery) {
                     await turnContext.sendActivity('Your response is auto-corrected to ' + alteredQuery);
@@ -140,12 +145,33 @@ class EchoBot {
                     else if (text.includes('registration')) {
                         await turnContext.sendActivity(`Type help to see more options...`);
                     }
-                } else {
+                    else if (text.includes('joke')) {
+                    const joke = await this.search(turnContext);
+                    JokeCard.body[1].text = `${joke}`;
+                        await turnContext.sendActivity({
+                            attachments: [CardFactory.adaptiveCard(JokeCard)]
+                        });
+                    }
+                    else if(text.includes('ok')){
+                        await turnContext.sendActivity('type joke if you are bored, let me tell you something funny;)');
+                    }
+                    
+                } else 
+                {
                     // If the top scoring intent was "None" tell the user no valid intents were found and provide help.
-                    await turnContext.sendActivity(`No LUIS intents were found.
+                    await turnContext.sendActivity(`I'm still learning.
                                                  \nYou can type help to see more options...`);
                 }
-
+            }
+            else{
+                let text2 = turnContext.activity.value.value;
+                if(text2 === "yesfunny"){
+                    await turnContext.sendActivity(`Thanks, I am glad that I made you laugh`);
+                }
+                else if(text2 === "nofunny"){
+                    await turnContext.sendActivity(`Oh okay, I will improve...`);
+                }
+            }
             }
             // Save state changes
             await this.conversationState.saveChanges(turnContext);
@@ -238,25 +264,32 @@ class EchoBot {
             }
         );
     }
-    async sendAJoke(turnContext) {
-        var options = {};
-        var joke;
+    async search(turnContext){
         var jokes = {};
-        request({ url: 'https://icanhazdadjoke.com/', headers: { Accept: 'text/plain' } }, (error, response, body) => {
-            //await turnContext.sendActivity(joke);
-            if (!error && response.statusCode == 200) {
-                console.log(body);
-                jokes.joke = body;
+        try{
+        return new Promise((resolve) => {
 
-                return body;
-                // return body;
-            }
+         request({ method: 'Get',url: 'https://icanhazdadjoke.com/', headers: { Accept: 'text/plain' } },
+                             (error, response, body) => {
+                                if (!error && response.statusCode == 200) 
+                                {
+                                    console.log('body:'+body);
+                                    jokes.joke = body;
+                                    resolve(body);
+                                }
+                                
+                            });
+                            
         });
-        if (jokes.joke) {
-            turnContext.sendActivity(jokes.joke);
+        
         }
-        else turnContext.sendActivity('hii');
-    }
+        catch(e){
+            console.log(`message is ${message}`)
+            await turnContext.sendActivity(message);
+        }
+        
+    };
+      
 }
 
 module.exports.EchoBot = EchoBot;
