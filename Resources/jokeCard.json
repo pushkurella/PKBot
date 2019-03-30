@@ -21,14 +21,14 @@
     "actions": [
       {
         "type": "Action.Submit",
-        "title": "Funny",
+        "title": "LOL... So Funny!!!",
         "data": {
             "value": "yesfunny"
         }
       },
       {
         "type": "Action.Submit",
-        "title": "Not Funny",
+        "title": "Not So Funny",
         "data": {
             "value": "nofunny"
         }

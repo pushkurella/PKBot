@@ -12,7 +12,8 @@ const USER_NAME_PROP = 'user_name';
 const CHOICE = 'choice_prompt';
 const request = require('request');
 const { LuisRecognizer } = require('botbuilder-ai');
-const HELLO_USER = 'hello_user'
+const HELLO_USER = 'hello_user';
+var weather = require('openweather-apis');
 
 class EchoBot {
     /**
@@ -146,8 +147,20 @@ class EchoBot {
                         await turnContext.sendActivity(`Type help to see more options...`);
                     }
                     else if (text.includes('joke')) {
-                    const joke = await this.search(turnContext);
+                    const joke = await this.GetAJoke(turnContext);
                     JokeCard.body[1].text = `${joke}`;
+                    var jokeImages = {
+                        1 : 'https://i.ytimg.com/vi/ynv8i2Blt9I/hqdefault.jpg',
+                        2 : 'https://wallpapersite.com/images/pages/pic_w/2681.jpg',
+                        3 : 'http://s1.1zoom.net/prev2/438/437602.jpg',
+                        4 : 'https://wallpaperplay.com/walls/full/f/e/1/161114.jpg',
+                        5 : 'https://linkbookmarking.com/wp-content/uploads/2018/08/high_quality_wallpaper_HD_1080_IDS_1119049.jpg',
+                        6 : 'https://wallpapersite.com/images/pages/pic_w/2686.jpg',
+                        7 : 'https://wallpaperplay.com/walls/full/7/7/a/161169.jpg'
+                    };
+                    var num = this.random(1,12);
+                    console.log(`random number generated is ${num}`);
+                    JokeCard.body[0].url = jokeImages[num];
                         await turnContext.sendActivity({
                             attachments: [CardFactory.adaptiveCard(JokeCard)]
                         });
@@ -155,8 +168,11 @@ class EchoBot {
                     else if(text.includes('ok')){
                         await turnContext.sendActivity('type joke if you are bored, let me tell you something funny;)');
                     }
+                    else if(text.includes('temp')){
+                        var JSONObj = await this.GetWeather(turnContext);
+                        turnContext.sendActivity(`The current temperature in kitchener is ${JSONObj.main.temp} deg and it may vary from ${JSONObj.main.temp_min} deg to ${JSONObj.main.temp_max} degrees. (${JSONObj.weather[0].description})`)  }
                     
-                } else 
+                    } else 
                 {
                     // If the top scoring intent was "None" tell the user no valid intents were found and provide help.
                     await turnContext.sendActivity(`I'm still learning.
@@ -264,20 +280,36 @@ class EchoBot {
             }
         );
     }
-    async search(turnContext){
+    async GetWeather(turnContext){
+        weather.setLang('en');
+        weather.setCity('Kitchener');
+        weather.setAPPID('4cd87c3ae59519b5db78beffb4d3a904');
+        var jsonobj={};
+        return new Promise((resolve,reject) => {
+            weather.getAllWeather(function(err, JSONObj){
+                jsonobj = JSONObj;
+                console.log(JSONObj);
+                resolve(JSONObj);
+                //turnContext.sendActivity(`The current temperature in kitchener is ${JSONObj.main.temp} deg and it may vary from ${JSONObj.main.temp_min}deg to ${JSONObj.main.temp_max}degrees.`)
+            });
+        });
+        
+    }
+    async GetAJoke(turnContext){
         var jokes = {};
+        
         try{
-        return new Promise((resolve) => {
-
-         request({ method: 'Get',url: 'https://icanhazdadjoke.com/', headers: { Accept: 'text/plain' } },
-                             (error, response, body) => {
+        return new Promise((resolve,reject) => {
+        
+        const options = { method: 'Get',url: 'https://icanhazdadjoke.com/', headers: { Accept: 'text/plain' } };
+         request(options,  (error, response, body) => {
                                 if (!error && response.statusCode == 200) 
                                 {
                                     console.log('body:'+body);
                                     jokes.joke = body;
                                     resolve(body);
                                 }
-                                
+                                else {reject(body)};
                             });
                             
         });
@@ -289,7 +321,9 @@ class EchoBot {
         }
         
     };
-      
+    random(low, high) {
+        return Math.floor(Math.random() * (high - low) + low);
+      }
 }
 
 module.exports.EchoBot = EchoBot;
