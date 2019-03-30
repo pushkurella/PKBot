@@ -45,7 +45,7 @@ class EchoBot {
         // This step in the dialog prompts the user for their name.
         async promptForName(step) {
             //You can type Introduction\nlocation\ncontact details\nregistration cost\ncall us\nemail us\n project details\nabout us\nhow to contact us
-            return await step.prompt(CHOICE, `You can click on any options if you are interested in us?`,[`Introduction`,'Location','Contact details','Registration cost','Call us','Email us','Project Details','About Us']);
+            return await step.prompt(CHOICE, `You can click on any options if you are interested in us?`,[`Introduction`,'Location','How is Weather?','Joke','Contact details','Registration cost','Call us','Email us','Project Details','About Us']);
         }
 
 
