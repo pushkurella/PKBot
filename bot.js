@@ -166,18 +166,21 @@ class EchoBot {
                         });
                     }
                     else if(text.includes('ok')){
-                        await turnContext.sendActivity('type joke if you are bored, let me tell you something funny;)');
+                        await turnContext.sendActivity('type joke if you are bored, let me tell you something funny');
+                    }
+                    else if(text.includes('bye')){
+                        await turnContext.sendActivity('Bye! Have a great day...');
                     }
                     else if(text.includes('temp')){
                         var JSONObj = await this.GetWeather(turnContext);
                         turnContext.sendActivity(`The current temperature in kitchener is ${JSONObj.main.temp} deg and it may vary from ${JSONObj.main.temp_min} deg to ${JSONObj.main.temp_max} degrees. (${JSONObj.weather[0].description})`)  }
                     
                     } else 
-                {
+                    {
                     // If the top scoring intent was "None" tell the user no valid intents were found and provide help.
                     await turnContext.sendActivity(`I'm still learning.
                                                  \nYou can type help to see more options...`);
-                }
+                    }
             }
             else{
                 let text2 = turnContext.activity.value.value;
