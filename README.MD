@@ -1,6 +1,5 @@
-# Echo Bot template
-
-This sample shows how to create a simple echo bot with state. The bot maintains a simple counter that increases with each message from the user. This bot example uses [`restify`](https://www.npmjs.com/package/restify). 
+# Bot
+This bot is integrated with Microsoft LUIS(Language Understanding and Intelligent Service), Bing spell checker API, Weather API and Joke API.
 
 # Prerequisite to run this bot locally
 - Download the bot code from the Build blade in the Azure Portal
@@ -37,18 +36,6 @@ In this example, the bot's state is used to track number of messages.
 
     - User properties can be used for many purposes, such as determining where the user's prior conversation left off or simply greeting a returning user by name. If you store a user's preferences, you can use that information to customize the conversation the next time you chat. For example, you might alert the user to a news article about a topic that interests her, or alert a user when an appointment becomes available. You should clear them if the bot receives a delete user data activity.
 
-# Deploy this bot to Azure
-You can use the [MSBot](https://github.com/microsoft/botbuilder-tools) Bot Builder CLI tool to clone and configure any services this sample depends on. 
-
-To install all Bot Builder tools - 
-```bash
-npm i -g msbot chatdown ludown qnamaker luis-apis botdispatch luisgen
-```
-
-To clone this bot, run
-```
-msbot clone services -f deploymentScripts/msbotClone -n <BOT-NAME> -l <Azure-location> --subscriptionId <Azure-subscription-id>
-```
 
 # Further reading
 - [Azure Bot Service Introduction](https://docs.microsoft.com/en-us/azure/bot-service/bot-service-overview-introduction?view=azure-bot-service-4.0)
