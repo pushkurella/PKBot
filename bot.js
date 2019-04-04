@@ -173,28 +173,45 @@ class EchoBot {
                     }
                     else if(text.includes('temp')){
                         var JSONObj = await this.GetWeather(turnContext);
-                        turnContext.sendActivity(`The current temperature in kitchener is ${JSONObj.main.temp} deg and it may vary from ${JSONObj.main.temp_min} deg to ${JSONObj.main.temp_max} degrees. (${JSONObj.weather[0].description})`)  }
-                    
-                    } else 
-                    {
+                        turnContext.sendActivity(`The current temperature in kitchener is ${JSONObj.main.temp} deg and it may vary from ${JSONObj.main.temp_min} deg to ${JSONObj.main.temp_max} degrees. (${JSONObj.weather[0].description})`)  
+                    }
+                    else if(text.includes('coi upload')){
+                        await turnContext.sendActivity(`Go to the left blue menu, and click documents.
+                                                 \nselect Main category = insurance documents, sub category = certificate of insurance.
+                                                 \nWhen you are on the "Your application is 100% complete", scroll down until you see the Insurance/Workers' Compensation/Bonding link.
+                                                 \nThen on this page, scroll down to the header that reads "insurance information".
+                                                 \nThen click the yellow button on the bottom right corner of your screen that reads "Enable Editing".
+                                                 \nReview the new certificate and the information on the application to ensure it is accurate.
+                                                 \nIf there is a new policy or change in coverage amount, then that should be reflected on your QCsolver application.`);
+                    }  else if(text.includes('online credit card issue')){
+                       await turnContext.sendActivity(`If you are unable to process the payment through cheque, We are happy to converse over a telephone call so that we can get a better understand of the issue with the online payment page`);
+                    }  else if(text.includes('clients')){
+                        await turnContext.sendActivity(`York is a client of QCsolver`);
+                    }
+                    }  else if(text.includes('upload reference letters')){
+                        await turnContext.sendActivity(`When you log in, go to your application and click the "work references" box.
+                        \nopen your references by clicking "edit" beside each one and you will see a document uploader in the pop up window where you can upload the respective reference letter.`);
+                    }  else {
                     // If the top scoring intent was "None" tell the user no valid intents were found and provide help.
                     await turnContext.sendActivity(`I'm still learning.
                                                  \nYou can type help to see more options...`);
                     }
-            }
-            else{
+                }else
+                {
                 let text2 = turnContext.activity.value.value;
-                if(text2 === "yesfunny"){
+                if(text2 === "yesfunny")
+                {
                     await turnContext.sendActivity(`Thanks, I am glad that I made you laugh`);
                 }
-                else if(text2 === "nofunny"){
+                else if(text2 === "nofunny")
+                {
                     await turnContext.sendActivity(`Oh okay, I will improve...`);
                 }
-            }
-            }
+            
+                }
             // Save state changes
             await this.conversationState.saveChanges(turnContext);
-
+            }
         } else if (turnContext.activity.type === ActivityTypes.ConversationUpdate) {
             // Generic handler for all other activity types.
             await this.sendWelcomeMessage(turnContext);
@@ -205,8 +222,6 @@ class EchoBot {
             // Generic message for all other activities
             await turnContext.sendActivity(`[${turnContext.activity.type} event detected]`);
         }
-        // Save changes to the user name.
-        //await this.userState.saveChanges(turnContext);
 
     }
 
