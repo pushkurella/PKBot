@@ -176,7 +176,8 @@ class EchoBot {
                          and it may vary from ${JSONObj.main.temp_min} deg to ${JSONObj.main.temp_max} degrees.
                           (${JSONObj.weather[0].description})`)  
                     }else if(text.includes('coi upload')){
-                            await turnContext.sendActivity(`1. Go to the left blue menu, and click documents.
+                            await turnContext.sendActivity(`Following are the steps to upload certificate of insurance documents:
+                                                    \n1. Go to the left blue menu, and click documents.
                                                     \n2. select Main category = insurance documents, sub category = certificate of insurance.
                                                     \n3. When you are on the "Your application is 100% complete", scroll down until you see the Insurance/Workers' Compensation/Bonding link.
                                                     \n4. Then on this page, scroll down to the header that reads "insurance information".
