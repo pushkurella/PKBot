@@ -189,7 +189,8 @@ class EchoBot {
                         }  else if(text.includes('clients')){
                                 await turnContext.sendActivity(`York University is a client of QCsolver`);
                         } else if(text.includes('upload reference letters')){
-                            await turnContext.sendActivity(`1. When you log in, go to your application and click the "work references" box.
+                            await turnContext.sendActivity(`Following are the steps to upload reference letters:
+                            \n1. When you log in, go to your application and click the "work references" box.
                             \n2. Open your references by clicking "edit" beside each one and you will see a document uploader in 
                             the pop up window where you can upload the respective reference letter.`);
                         }
