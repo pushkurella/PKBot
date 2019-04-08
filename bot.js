@@ -187,7 +187,13 @@ class EchoBot {
                         }else if(text.includes('online credit card issue')){
                             await turnContext.sendActivity(`If you are unable to process the payment through cheque, We are happy to converse over a telephone call so that we can get a better understand of the issue with the online payment page`);
                         }  else if(text.includes('clients')){
-                                await turnContext.sendActivity(`York University is a client of QCsolver`);
+                                await turnContext.sendActivity(` Here goes our list of prestigious clients...
+                                \n1. Cambridge Solutions Inc.
+                                \n2. University of Toronto
+                                \n3. York University
+                                \n4. McMaster University
+                                \n5. Town of Whitby
+                                \n6. Culliton Inc.`);
                         } else if(text.includes('upload reference letters')){
                             await turnContext.sendActivity(`Following are the steps to upload reference letters:
                             \n1. When you log in, go to your application and click the "work references" box.
