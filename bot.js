@@ -45,7 +45,7 @@ class EchoBot {
         // This step in the dialog prompts the user for their name.
         async promptForName(step) {
             //You can type Introduction\nlocation\ncontact details\nregistration cost\ncall us\nemail us\n project details\nabout us\nhow to contact us
-            return await step.prompt(CHOICE, `You can click on any options if you are interested in us?`,[`Introduction`,'Location','How is Weather?','Joke','Contact details','Registration cost','Call us','Email us','Project Details','About Us']);
+            return await step.prompt(CHOICE, `You can click on any options if you are interested in us?`,[`Introduction`,'Location','Contact details','Registration cost','Call us','Email us','Project Details','About Us']);
         }
 
 
@@ -148,34 +148,35 @@ class EchoBot {
                     else if (text.includes('registration')) {
                         await turnContext.sendActivity(`Type help to see more options...`);
                     }
-                    else if (text.includes('joke')) {
-                    const joke = await this.GetAJoke(turnContext);
-                    JokeCard.body[1].text = `${joke}`;
-                    var jokeImages = {
-                        1 : 'https://i.ytimg.com/vi/ynv8i2Blt9I/hqdefault.jpg',
-                        2 : 'https://wallpapersite.com/images/pages/pic_w/2681.jpg',
-                        3 : 'http://s1.1zoom.net/prev2/438/437602.jpg',
-                        4 : 'https://wallpaperplay.com/walls/full/f/e/1/161114.jpg',
-                        5 : 'https://linkbookmarking.com/wp-content/uploads/2018/08/high_quality_wallpaper_HD_1080_IDS_1119049.jpg',
-                        6 : 'https://wallpapersite.com/images/pages/pic_w/2686.jpg',
-                        7 : 'https://wallpaperplay.com/walls/full/7/7/a/161169.jpg'
-                    };
-                    var num = this.random(1,12);
-                    console.log(`random number generated is ${num}`);
-                    JokeCard.body[0].url = jokeImages[num];
-                        await turnContext.sendActivity({
-                            attachments: [CardFactory.adaptiveCard(JokeCard)]
-                        });
-                    }
+                    // else if (text.includes('joke')) {
+                    // const joke = await this.GetAJoke(turnContext);
+                    // JokeCard.body[1].text = `${joke}`;
+                    // var jokeImages = {
+                    //     1 : 'https://i.ytimg.com/vi/ynv8i2Blt9I/hqdefault.jpg',
+                    //     2 : 'https://wallpapersite.com/images/pages/pic_w/2681.jpg',
+                    //     3 : 'http://s1.1zoom.net/prev2/438/437602.jpg',
+                    //     4 : 'https://wallpaperplay.com/walls/full/f/e/1/161114.jpg',
+                    //     5 : 'https://linkbookmarking.com/wp-content/uploads/2018/08/high_quality_wallpaper_HD_1080_IDS_1119049.jpg',
+                    //     6 : 'https://wallpapersite.com/images/pages/pic_w/2686.jpg',
+                    //     7 : 'https://wallpaperplay.com/walls/full/7/7/a/161169.jpg'
+                    // };
+                    // var num = this.random(1,12);
+                    // console.log(`random number generated is ${num}`);
+                    // JokeCard.body[0].url = jokeImages[num];
+                    //     await turnContext.sendActivity({
+                    //         attachments: [CardFactory.adaptiveCard(JokeCard)]
+                    //     });
+                    // }
                     else if(text.includes('ok')){
                         await turnContext.sendActivity('type joke if you are bored, let me tell you something funny;)');
                     }
-                    else if(text.includes('temp')){
-                        var JSONObj = await this.GetWeather(turnContext);
-                        turnContext.sendActivity(`The current temperature in kitchener is ${JSONObj.main.temp} deg
-                         and it may vary from ${JSONObj.main.temp_min} deg to ${JSONObj.main.temp_max} degrees.
-                          (${JSONObj.weather[0].description})`)  
-                    }else if(text.includes('coi upload')){
+                    // else if(text.includes('temp')){
+                    //     var JSONObj = await this.GetWeather(turnContext);
+                    //     turnContext.sendActivity(`The current temperature in kitchener is ${JSONObj.main.temp} deg
+                    //      and it may vary from ${JSONObj.main.temp_min} deg to ${JSONObj.main.temp_max} degrees.
+                    //       (${JSONObj.weather[0].description})`)  
+                    // }
+                    else if(text.includes('coi upload')){
                             await turnContext.sendActivity(`Following are the steps to upload certificate of insurance documents:
                                                     \n1. Go to the left blue menu, and click documents.
                                                     \n2. select Main category = insurance documents, sub category = certificate of insurance.
