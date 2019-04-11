@@ -45,7 +45,7 @@ class EchoBot {
         // This step in the dialog prompts the user for their name.
         async promptForName(step) {
             //You can type Introduction\nlocation\ncontact details\nregistration cost\ncall us\nemail us\n project details\nabout us\nhow to contact us
-            return await step.prompt(CHOICE, `You can click on any options if you are interested in us?`,[`Introduction`,'Location','Contact details','Registration cost','Call us','Email us','Project Details','About Us']);
+            return await step.prompt(CHOICE, `You can click on any options if you are interested in us?`,[`Introduction`,`Location details`,`List of Clients`,`Steps to upload Insurance docs`,`Contact details`,`Registration cost`,`Call us`,`Email us`,`Project Details`,`About Us`]);
         }
 
 
@@ -116,7 +116,7 @@ class EchoBot {
 
                     }
                     else if (text.includes('details')) {
-                        await turnContext.sendActivity(`The project is all about parsing PDF documents and extracting required fields in it.`);
+                        await turnContext.sendActivity(`The application QC solver data parsing parses Insurance documents which are in PDF format, extracts relevant fields, allows user to add, update and delete fields if needed and finally pushes it to the Database.`);
 
                     }
                     else if (text.includes('about')) {
@@ -170,13 +170,13 @@ class EchoBot {
                     else if(text.includes('ok')){
                         await turnContext.sendActivity('type joke if you are bored, let me tell you something funny;)');
                     }
-                    // else if(text.includes('temp')){
-                    //     var JSONObj = await this.GetWeather(turnContext);
-                    //     turnContext.sendActivity(`The current temperature in kitchener is ${JSONObj.main.temp} deg
-                    //      and it may vary from ${JSONObj.main.temp_min} deg to ${JSONObj.main.temp_max} degrees.
-                    //       (${JSONObj.weather[0].description})`)  
-                    // }
-                    else if(text.includes('coi upload')){
+                    else if(text.includes('temp')){
+                        var JSONObj = await this.GetWeather(turnContext);
+                        turnContext.sendActivity(`The current temperature in kitchener is ${JSONObj.main.temp} deg
+                         and it may vary from ${JSONObj.main.temp_min} deg to ${JSONObj.main.temp_max} degrees.
+                          (${JSONObj.weather[0].description})`)  
+                    }
+                    else if(text.includes('steps to upload')){
                             await turnContext.sendActivity(`Following are the steps to upload certificate of insurance documents:
                                                     \n1. Go to the left blue menu, and click documents.
                                                     \n2. select Main category = insurance documents, sub category = certificate of insurance.
