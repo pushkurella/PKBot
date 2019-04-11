@@ -71,7 +71,7 @@ class EchoBot {
             if (didBotWelcomedUser === false) {
                 // The channel should send the user name in the 'From' object
                 //let userName = turnContext.activity.from.name;
-                await turnContext.sendActivity(`Nice to meet you , What can i do for you? type help if needed`);
+                await turnContext.sendActivity(`Nice to meet you , What can i do for you? Type help if you want to see what can i do`);
                 // Set the flag indicating the bot handled the user's first message.
                 await this.welcomedUserProperty.set(turnContext, true);
             }
