@@ -42,3 +42,21 @@ In this example, the bot's state is used to track number of messages.
 - [Bot State](https://docs.microsoft.com/en-us/azure/bot-service/bot-builder-storage-concept?view=azure-bot-service-4.0)
 - [Write directly to storage](https://docs.microsoft.com/en-us/azure/bot-service/bot-builder-howto-v4-storage?view=azure-bot-service-4.0&tabs=jsechoproperty%2Ccsetagoverwrite%2Ccsetag)
 - [Managing conversation and user state](https://docs.microsoft.com/en-us/azure/bot-service/bot-builder-howto-v4-state?view=azure-bot-service-4.0&tabs=js)
+
+
+env contents
+AzureWebJobsDashboard=DefaultEndpointsProtocol=https;AccountName=pkbot892e;AccountKey=iqAXEMS39gCtffd8V8LgSgjf7F1SzGucohMyTKhCFiBBHl6wYmNSmRTxQbLrW7zbjqXxUcmAFBtsP5E7egsgng==;
+AzureWebJobsStorage=DefaultEndpointsProtocol=https;AccountName=pkbot892e;AccountKey=iqAXEMS39gCtffd8V8LgSgjf7F1SzGucohMyTKhCFiBBHl6wYmNSmRTxQbLrW7zbjqXxUcmAFBtsP5E7egsgng==;
+botFilePath=./PKBot.bot
+botFileSecret=OBh1SHQlnXsmbG3mJPJD1scPfnW4roxK3cYZ7r1tUAc=
+BotId=PKBot
+BotStateEndpoint=
+MicrosoftAppId=babf85b7-6f8c-460f-92b9-a2c4b1065db8
+MicrosoftAppPassword=xhrOUUO464$]qfvnWEV01$)
+REMOTEDEBUGGINGVERSION=15.0.28010.00
+ScmType=None
+UseTableStorageForConversationState=true
+luisapplicationId=4e4d3ac1-0b45-47ae-a1ed-e83e62a1df3f
+# luisdetails
+luissubscriptionkey=e358a70e1372402caa166961df52082d
+bingSpellcheckKey=68e41212ffc1411986aa3b386d07b3e1
